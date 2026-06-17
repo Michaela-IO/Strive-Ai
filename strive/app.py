@@ -563,62 +563,63 @@ def render_feed():
         items = date_groups.get(label)
         if not items:
             continue
-        st.markdown(f"<div class='feed-section-label'>{label}</div>", unsafe_allow_html=True)
-        for c in items:
-            u = db.query(User).filter(User.id == c.user_id).first()
-            group = db.query(StreakGroup).filter(StreakGroup.id == c.streak_group_id).first()
-            goal = group.goal if group else None
-            member = db.query(StreakMember).filter(
-                StreakMember.user_id == c.user_id,
-                StreakMember.streak_group_id == c.streak_group_id
-            ).first()
-            streak = member.current_streak if member else 0
-            ini = initials(u.username) if u else "??"
-            sentiment = c.sentiment or "neutral"
-            s_icon = "fa-rocket" if sentiment == "motivated" else "fa-frown" if sentiment == "struggling" else "fa-meh"
-            flames = db.query(Reaction).filter(Reaction.checkin_id == c.id, Reaction.type == "flame").count()
-            verified_icon = ' <i class="fas fa-check-circle verified-icon"></i>' if c.verified else ""
-            time_str = c.created_at.strftime("%I:%M %p").lstrip("0")
-            st.markdown(f"""
-            <div class='feed-card'>
-                <div class='feed-row'>
-                    <div class='avatar feed-avatar'>{ini}</div>
-                    <div class='feed-body'>
-                        <div class='feed-head'>
-                            <span class='feed-user'>@{u.username if u else 'unknown'}{verified_icon}</span>
-                            <span class='feed-sep'>&middot;</span>
-                            <span class='feed-goal'>{goal.title if goal else 'Unknown'}</span>
-                            <span class='feed-sep'>&middot;</span>
-                            <span class='feed-time'>{time_str}</span>
-                        </div>
-                        <div class='feed-caption'>"{c.caption}"</div>
-                        <div class='feed-foot'>
-                            <span class='sentiment-chip sentiment-{sentiment}'><i class='fas {s_icon}'></i>{sentiment}</span>
-                            <span class='feed-streak'><i class='fas fa-fire'></i>{streak}d</span>
-                            <span class='feed-reactions'><i class='fas fa-fire'></i>{flames}</span>
+        is_today = label == "Today"
+        with st.expander(f"**{label}** ({len(items)})", expanded=is_today):
+            for c in items:
+                u = db.query(User).filter(User.id == c.user_id).first()
+                group = db.query(StreakGroup).filter(StreakGroup.id == c.streak_group_id).first()
+                goal = group.goal if group else None
+                member = db.query(StreakMember).filter(
+                    StreakMember.user_id == c.user_id,
+                    StreakMember.streak_group_id == c.streak_group_id
+                ).first()
+                streak = member.current_streak if member else 0
+                ini = initials(u.username) if u else "??"
+                sentiment = c.sentiment or "neutral"
+                s_icon = "fa-rocket" if sentiment == "motivated" else "fa-frown" if sentiment == "struggling" else "fa-meh"
+                flames = db.query(Reaction).filter(Reaction.checkin_id == c.id, Reaction.type == "flame").count()
+                verified_icon = ' <i class="fas fa-check-circle verified-icon"></i>' if c.verified else ""
+                time_str = c.created_at.strftime("%I:%M %p").lstrip("0")
+                st.markdown(f"""
+                <div class='feed-card'>
+                    <div class='feed-row'>
+                        <div class='avatar feed-avatar'>{ini}</div>
+                        <div class='feed-body'>
+                            <div class='feed-head'>
+                                <span class='feed-user'>@{u.username if u else 'unknown'}{verified_icon}</span>
+                                <span class='feed-sep'>&middot;</span>
+                                <span class='feed-goal'>{goal.title if goal else 'Unknown'}</span>
+                                <span class='feed-sep'>&middot;</span>
+                                <span class='feed-time'>{time_str}</span>
+                            </div>
+                            <div class='feed-caption'>"{c.caption}"</div>
+                            <div class='feed-foot'>
+                                <span class='sentiment-chip sentiment-{sentiment}'><i class='fas {s_icon}'></i>{sentiment}</span>
+                                <span class='feed-streak'><i class='fas fa-fire'></i>{streak}d</span>
+                                <span class='feed-reactions'><i class='fas fa-fire'></i>{flames}</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>""", unsafe_allow_html=True)
-            col1, col2, col3 = st.columns([1, 1, 1])
-            with col1:
-                if st.button(f"React ({flames})", key=f"react_{c.id}"):
-                    db.add(Reaction(user_id=st.session_state.user_id, checkin_id=c.id, type="flame"))
-                    db.commit()
-                    st.rerun()
-            with col2:
-                if st.button("Comment", key=f"comment_{c.id}"):
-                    st.info("Comments coming soon")
-                    st.rerun()
-            with col3:
-                if st.button("Nudge", key=f"nudge_card_{c.id}"):
-                    if c.user_id == st.session_state.user_id:
-                        st.warning("Can't nudge yourself!")
-                    else:
-                        db.add(Nudge(sender_id=st.session_state.user_id, receiver_id=c.user_id, streak_group_id=c.streak_group_id))
+                </div>""", unsafe_allow_html=True)
+                col1, col2, col3 = st.columns([1, 1, 1])
+                with col1:
+                    if st.button(f"React ({flames})", key=f"react_{c.id}"):
+                        db.add(Reaction(user_id=st.session_state.user_id, checkin_id=c.id, type="flame"))
                         db.commit()
-                        st.success(f"Nudge sent to @{u.username}!")
-                    st.rerun()
+                        st.rerun()
+                with col2:
+                    if st.button("Comment", key=f"comment_{c.id}"):
+                        st.info("Comments coming soon")
+                        st.rerun()
+                with col3:
+                    if st.button("Nudge", key=f"nudge_card_{c.id}"):
+                        if c.user_id == st.session_state.user_id:
+                            st.warning("Can't nudge yourself!")
+                        else:
+                            db.add(Nudge(sender_id=st.session_state.user_id, receiver_id=c.user_id, streak_group_id=c.streak_group_id))
+                            db.commit()
+                            st.success(f"Nudge sent to @{u.username}!")
+                        st.rerun()
     db.close()
 
 def render_checkin():
