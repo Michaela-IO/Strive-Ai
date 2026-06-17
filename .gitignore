@@ -1,49 +1,6 @@
-# Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
-*$py.class
-
-# Virtual environments
-venv/
-env/
-.venv/
+*.pyc
 .env
-
-# Streamlit
-.streamlit/
-config.toml
-
-# Database
 *.db
-*.sqlite
-*.sqlite3
-strive.db
-data/
-
-# IDE
 .vscode/
 .idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-logs/
-
-# Environment variables
-.env.local
-.env.*.local
-
-# Test coverage
-.coverage
-htmlcov/
-.pytest_cache/
-
-# Distribution / packaging
-dist/
-build/
-*.egg-info/
