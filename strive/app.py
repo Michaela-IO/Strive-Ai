@@ -28,6 +28,11 @@ IMG_VISION = img_bg("vision.jfif")
 IMG_LOGIN = img_bg("gemini_bg.jpg")
 
 init_db()
+db_check = SessionLocal()
+if not db_check.query(User).first():
+    from seed_data import seed_database
+    seed_database()
+db_check.close()
 
 st.set_page_config(page_title="Strive", page_icon="🔥", layout="wide", initial_sidebar_state="collapsed")
 
