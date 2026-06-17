@@ -304,8 +304,9 @@ def render_login():
                 ("alice@strive.app", "alice1234", "Alice", "#7C5CFC"),
                 ("bob@strive.app", "bob1234", "Bob", "#2ED573"),
                 ("charlie@strive.app", "charlie1234", "Charlie", "#FFA502"),
+                ("diana@strive.app", "diana1234", "Diana", "#2ED573"),
             ]
-            cols = st.columns(4)
+            cols = st.columns(len(demos))
             for i, (em, pw, name, color) in enumerate(demos):
                 with cols[i]:
                     st.markdown(f"<div class='demo-card'><div class='demo-avatar' style='background:{color}20;color:{color}'>{name[0]}</div><div class='demo-name'>{name}</div><div class='demo-email'>{em}</div></div>", unsafe_allow_html=True)
@@ -592,7 +593,7 @@ def render_checkin():
         st.info("Join a streak group first from the Goals page.")
         db.close()
         return
-    cat_icons = {"Fitness":"fa-dumbbell","Mindfulness":"fa-brain","Learning":"fa-book","Productivity":"fa-tasks","Health":"fa-heartbeat","Creativity":"fa-palette","Finance":"fa-coins","Social":"fa-users","Other":"fa-star"}
+    cat_icons = {"Fitness":"fa-dumbbell","Coding":"fa-code","Reading":"fa-book-open","Meditation":"fa-spa","Study":"fa-graduation-cap","Sleep":"fa-bed","Productivity":"fa-tasks","Health":"fa-heartbeat","Mindfulness":"fa-brain","Learning":"fa-book","Creativity":"fa-palette","Finance":"fa-coins","Social":"fa-users","Other":"fa-star"}
     rows = []
     total = 0
     done = 0

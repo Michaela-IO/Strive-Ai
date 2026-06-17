@@ -17,6 +17,8 @@ SEED_GOALS = [
     ("Daily Coding", "Code at least 30 minutes every day", "Coding", 60),
     ("Read 10 Pages", "Read 10 pages of any book daily", "Reading", 30),
     ("Meditation", "10 minutes of mindfulness meditation", "Meditation", 21),
+    ("Study Skills", "Learn something new every day", "Study", 30),
+    ("Sleep Schedule", "8 hours of sleep daily", "Sleep", 21),
 ]
 
 SENTIMENTS = ["motivated", "neutral", "struggling"]
@@ -29,6 +31,8 @@ CAPTIONS = [
     "Rough morning but pushed through",
     "Another day, another step forward",
     "Feeling great about this streak!",
+    "Small steps lead to big results",
+    "Proud of myself for showing up today",
 ]
 
 def seed_database():
