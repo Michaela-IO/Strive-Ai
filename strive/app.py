@@ -140,8 +140,7 @@ div[data-testid="stRadio"] label > div:first-child { display: none; }
 .feed-streak { font-size: 12px; color: #E65100; font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
 .feed-reactions { font-size: 12px; color: #ADB5BD; display: inline-flex; align-items: center; gap: 3px; }
 .verified-icon { color: #2ED573; font-size: 12px; margin-left: 2px; }
-button[data-testid*="react_"], button[data-testid*="comment_"], button[data-testid*="nudge_card_"] { background: white !important; color: #636E72 !important; border: 1px solid #DEE2E6 !important; font-size: 12px !important; padding: 4px 8px !important; border-radius: 6px !important; }
-button[data-testid*="react_"]:hover, button[data-testid*="comment_"]:hover, button[data-testid*="nudge_card_"]:hover { background: #F8F9FA !important; border-color: #ADB5BD !important; }
+
 .action-btn-joined { background: #E1F5EE; color: #0F6E56; border-color: #9FE1CB; }
 .goal-card { background: white; border: 1px solid #E9ECEF; border-radius: 12px; padding: 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
 .profile-header { background: white; border: 1px solid #E9ECEF; border-radius: 14px; padding: 28px; text-align: center; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
@@ -567,20 +566,23 @@ def render_feed():
             </div>""", unsafe_allow_html=True)
             col1, col2, col3 = st.columns([1, 1, 1])
             with col1:
-                if st.button("React", key=f"react_{c.id}"):
+                if st.button(f"React ({flames})", key=f"react_{c.id}"):
                     db.add(Reaction(user_id=st.session_state.user_id, checkin_id=c.id, type="flame"))
                     db.commit()
                     st.rerun()
             with col2:
                 if st.button("Comment", key=f"comment_{c.id}"):
                     st.info("Comments coming soon")
+                    st.rerun()
             with col3:
                 if st.button("Nudge", key=f"nudge_card_{c.id}"):
-                    if c.user_id != st.session_state.user_id:
+                    if c.user_id == st.session_state.user_id:
+                        st.warning("Can't nudge yourself!")
+                    else:
                         db.add(Nudge(sender_id=st.session_state.user_id, receiver_id=c.user_id, streak_group_id=c.streak_group_id))
                         db.commit()
                         st.success(f"Nudge sent to @{u.username}!")
-                        st.rerun()
+                    st.rerun()
     db.close()
 
 def render_checkin():
