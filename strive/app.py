@@ -89,44 +89,51 @@ html { scroll-behavior: smooth; }
 .floating-shape-3 { width:150px; height:150px; background:#2ED573; bottom:-30px; right:20%; animation:float 5s ease-in-out infinite 0.5s; }
 """ + "</style>", unsafe_allow_html=True)
 st.markdown("<style>" + """\
-.app-nav { background: white; border-radius: 14px; padding: 6px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 1px 4px rgba(0,0,0,0.04); }
+/* === Glassmorphism Nav === */
+.app-nav { background: rgba(255,255,255,0.75); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border-radius: 16px; padding: 6px 20px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.4); box-shadow: 0 8px 32px rgba(0,0,0,0.06); }
 .nav-logo { font-size: 18px; font-weight: 700; color: #2D3436; display: flex; align-items: center; gap: 8px; }
-.nav-logo i { color: #FF4757; font-size: 20px; }
+.nav-logo i { color: #FF4757; font-size: 20px; filter: drop-shadow(0 0 6px rgba(255,71,87,0.3)); }
 .nav-user { font-size: 13px; color: #636E72; display: flex; align-items: center; gap: 6px; }
 .nav-user i { font-size: 16px; color: #ADB5BD; }
 div[data-testid="stRadio"] > div { display: flex; gap: 2px; flex-wrap: wrap; }
-div[data-testid="stRadio"] label { background: transparent; border: none; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; color: #636E72; cursor: pointer; transition: all 0.15s; }
-div[data-testid="stRadio"] label:hover { background: #F8F9FA; color: #FF4757; }
-div[data-testid="stRadio"] label[data-baseweb="radio"][aria-checked="true"] { background: #FF4757; color: white !important; font-weight: 600; box-shadow: 0 2px 8px rgba(255,71,87,0.25); }
-div[data-testid="stRadio"] label[data-baseweb="radio"][aria-checked="true"]:hover { background: #E63946; }
+div[data-testid="stRadio"] label { background: transparent; border: none; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; color: #636E72; cursor: pointer; transition: all 0.2s ease; }
+div[data-testid="stRadio"] label:hover { background: rgba(255,71,87,0.06); color: #FF4757; }
+div[data-testid="stRadio"] label[data-baseweb="radio"][aria-checked="true"] { background: linear-gradient(135deg,#FF4757,#FF6B81); color: white !important; font-weight: 600; box-shadow: 0 4px 16px rgba(255,71,87,0.35); }
+div[data-testid="stRadio"] label[data-baseweb="radio"][aria-checked="true"]:hover { background: linear-gradient(135deg,#E63946,#FF5252); }
 div[data-testid="stRadio"] input { display: none; }
 div[data-testid="stRadio"] label > div:first-child { display: none; }
 
-.card { background: white; border: 1px solid #E9ECEF; border-radius: 12px; padding: 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); transition: box-shadow 0.15s; }
-.card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.06); }
-.stat-card { background: white; border: 1px solid #E9ECEF; border-radius: 12px; padding: 20px 16px; text-align: center; margin-bottom: 12px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
-.stat-number { font-size: 32px; font-weight: 700; color: #FF4757; display: block; line-height: 1.2; }
-.stat-label { font-size: 11px; color: #636E72; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; }
-.avatar { width: 36px; height: 36px; border-radius: 50%; background: #E1F5EE; color: #0F6E56; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 12px; flex-shrink: 0; }
-.avatar-purple { background: #EEEDFE; color: #534AB7; }
-.avatar-coral  { background: #FAECE7; color: #993C1D; }
-.avatar-amber  { background: #FAEEDA; color: #854F0B; }
-.profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: #E1F5EE; color: #0F6E56; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; margin: 0 auto 14px; border: 2px solid #9FE1CB; }
+/* === 3D Card System === */
+.card, .goal-card, .stat-card, .profile-header, .notif-card { background: white; border: 1px solid #E9ECEF; border-radius: 14px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); transform: perspective(800px) rotateX(0deg); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.card:hover, .goal-card:hover, .notif-card:hover { transform: perspective(800px) rotateX(-1deg) translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.08), 0 8px 16px rgba(255,71,87,0.06); border-color: rgba(255,71,87,0.15); }
+.profile-header:hover { transform: perspective(800px) rotateX(-1deg) scale(1.01); box-shadow: 0 24px 48px rgba(0,0,0,0.1); }
+.goal-card { padding: 16px; margin-bottom: 10px; }
+.stat-card { padding: 20px 16px; text-align: center; margin-bottom: 12px; }
+.stat-card:hover { transform: perspective(800px) rotateX(-2deg) translateY(-6px); box-shadow: 0 24px 40px rgba(255,71,87,0.12); }
+.stat-number { font-size: 32px; font-weight: 700; background: linear-gradient(135deg,#FF4757,#FF6B81); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; display: block; line-height: 1.2; }
+.stat-label { font-size: 11px; color: #636E72; margin-top: 6px; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+.avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#E1F5EE,#C8F0DC); color: #0F6E56; display: inline-flex; align-items: center; justify-content: center; font-weight: 600; font-size: 12px; flex-shrink: 0; }
+.avatar-purple { background: linear-gradient(135deg,#EEEDFE,#D5D0F8); color: #534AB7; }
+.avatar-coral  { background: linear-gradient(135deg,#FAECE7,#F5D5CA); color: #993C1D; }
+.avatar-amber  { background: linear-gradient(135deg,#FAEEDA,#F5D5A0); color: #854F0B; }
+.profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg,#E1F5EE,#9FE1CB); color: #0F6E56; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; margin: 0 auto 14px; border: 3px solid rgba(159,225,203,0.4); box-shadow: 0 8px 24px rgba(46,213,115,0.15); }
 .section-label { font-size: 11px; font-weight: 600; color: #636E72; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; }
 .feed-section-label { font-size: 11px; font-weight: 600; color: #636E72; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; margin-top: 20px; }
 .feed-allclear { font-size: 13px; color: #636E72; padding: 4px 0 12px; }
 .feed-allclear i { color: #2ED573; margin-right: 6px; }
-.streak-pill { background: #FFF3E0; color: #E65100; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; white-space: nowrap; border: 1px solid #FFB74D; display: inline-flex; align-items: center; gap: 4px; }
-.category-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: #EEEDFE; color: #534AB7; border: 1px solid #D0C9F5; margin-bottom: 8px; }
+.streak-pill { background: linear-gradient(135deg,#FFF3E0,#FFE0B2); color: #E65100; font-size: 11px; font-weight: 600; padding: 4px 10px; border-radius: 20px; white-space: nowrap; border: 1px solid #FFB74D; display: inline-flex; align-items: center; gap: 4px; }
+.category-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; background: linear-gradient(135deg,#EEEDFE,#D0C9F5); color: #534AB7; border: 1px solid #D0C9F5; margin-bottom: 8px; }
 .sentiment-chip { display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
-.sentiment-motivated  { background: #E1F5EE; color: #0F6E56; border: 1px solid #9FE1CB; }
-.sentiment-struggling { background: #FCEBEB; color: #A32D2D; border: 1px solid #F09595; }
-.sentiment-neutral    { background: #F8F9FA; color: #636E72; border: 1px solid #DEE2E6; }
-.at-risk-row { display: flex; align-items: center; gap: 10px; background: #FFF3E0; border: 1px solid #FFB74D; border-radius: 10px; padding: 10px 14px; margin-bottom: 8px; }
+.sentiment-motivated  { background: linear-gradient(135deg,#E1F5EE,#C8F0DC); color: #0F6E56; border: 1px solid #9FE1CB; }
+.sentiment-struggling { background: linear-gradient(135deg,#FCEBEB,#F8D5D5); color: #A32D2D; border: 1px solid #F09595; }
+.sentiment-neutral    { background: linear-gradient(135deg,#F8F9FA,#EEEEEE); color: #636E72; border: 1px solid #DEE2E6; }
+.at-risk-row { display: flex; align-items: center; gap: 10px; background: linear-gradient(135deg,#FFF3E0,#FFE0B2); border: 1px solid #FFB74D; border-radius: 10px; padding: 10px 14px; margin-bottom: 8px; transition: all 0.3s ease; }
+.at-risk-row:hover { transform: translateX(4px); box-shadow: 0 4px 12px rgba(255,165,2,0.15); }
 .at-risk-avatar { width: 32px; height: 32px; font-size: 11px; }
 .at-risk-name { font-size: 13px; font-weight: 600; color: #854F0B; }
 .at-risk-goals { font-size: 11px; color: #BF6A00; }
-.feed-card { padding: 14px 0; border-bottom: 1px solid #F0F0F0; }
+.feed-card { padding: 14px 0; border-bottom: 1px solid #F0F0F0; transition: all 0.2s ease; }
+.feed-card:hover { background: rgba(255,71,87,0.02); padding-left: 8px; padding-right: 8px; border-radius: 8px; border-bottom-color: transparent; margin-left: -8px; margin-right: -8px; }
 .feed-row { display: flex; gap: 10px; align-items: flex-start; }
 .feed-avatar { width: 32px; height: 32px; font-size: 11px; margin-top: 2px; }
 .feed-body { flex: 1; min-width: 0; }
@@ -140,31 +147,49 @@ div[data-testid="stRadio"] label > div:first-child { display: none; }
 .feed-streak { font-size: 12px; color: #E65100; font-weight: 600; display: inline-flex; align-items: center; gap: 3px; }
 .feed-reactions { font-size: 12px; color: #ADB5BD; display: inline-flex; align-items: center; gap: 3px; }
 .verified-icon { color: #2ED573; font-size: 12px; margin-left: 2px; }
-
-.action-btn-joined { background: #E1F5EE; color: #0F6E56; border-color: #9FE1CB; }
-.goal-card { background: white; border: 1px solid #E9ECEF; border-radius: 12px; padding: 16px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
-.profile-header { background: white; border: 1px solid #E9ECEF; border-radius: 14px; padding: 28px; text-align: center; margin-bottom: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
-.notif-card { background: white; border: 1px solid #E9ECEF; border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 10px; }
+.action-btn-joined { background: linear-gradient(135deg,#E1F5EE,#C8F0DC); color: #0F6E56; border-color: #9FE1CB; }
+.profile-header { padding: 28px; text-align: center; margin-bottom: 20px; }
+.notif-card { padding: 12px 14px; margin-bottom: 8px; display: flex; align-items: flex-start; gap: 10px; }
 .notif-icon { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
-.ai-message-user { background: #FF4757; color: white; border-radius: 16px 16px 4px 16px; padding: 10px 14px; font-size: 13px; margin: 6px 0; max-width: 80%; margin-left: auto; line-height: 1.5; }
-.ai-message-bot { background: white; border: 1px solid #E9ECEF; border-radius: 16px 16px 16px 4px; padding: 10px 14px; font-size: 13px; margin: 6px 0; max-width: 85%; line-height: 1.5; }
-div[data-testid="stButton"] button { background: #FF4757 !important; color: white !important; border: none !important; border-radius: 8px !important; font-weight: 600 !important; font-size: 13px !important; padding: 8px 16px !important; }
-div[data-testid="stButton"] button:hover { background: #E63946 !important; box-shadow: 0 2px 8px rgba(255,71,87,0.3) !important; }
-button[key="logout_btn"] { background: transparent !important; color: #ADB5BD !important; border: 1px solid #DEE2E6 !important; padding: 4px 12px !important; font-size: 12px !important; font-weight: 500 !important; }
-button[key="logout_btn"]:hover { background: #F8F9FA !important; color: #FF4757 !important; border-color: #FF4757 !important; box-shadow: none !important; }
-.stTextInput input, .stTextArea textarea { background: #F8F9FA !important; border: 1px solid #DEE2E6 !important; border-radius: 10px !important; color: #2D3436 !important; font-size: 13px !important; }
-.stTabs [data-baseweb="tab"] { font-size: 13px; font-weight: 500; color: #636E72; }
+.ai-message-user { background: linear-gradient(135deg,#FF4757,#FF6B81); color: white; border-radius: 16px 16px 4px 16px; padding: 10px 14px; font-size: 13px; margin: 6px 0; max-width: 80%; margin-left: auto; line-height: 1.5; box-shadow: 0 4px 12px rgba(255,71,87,0.2); }
+.ai-message-bot { background: white; border: 1px solid #E9ECEF; border-radius: 16px 16px 16px 4px; padding: 10px 14px; font-size: 13px; margin: 6px 0; max-width: 85%; line-height: 1.5; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+div[data-testid="stButton"] button { background: linear-gradient(135deg,#FF4757,#FF6B81) !important; color: white !important; border: none !important; border-radius: 10px !important; font-weight: 600 !important; font-size: 13px !important; padding: 8px 18px !important; transition: all 0.3s cubic-bezier(0.175,0.885,0.32,1.275) !important; box-shadow: 0 4px 12px rgba(255,71,87,0.25) !important; }
+div[data-testid="stButton"] button:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 24px rgba(255,71,87,0.35) !important; }
+div[data-testid="stButton"] button:active { transform: translateY(0) scale(0.98) !important; }
+button[key="logout_btn"] { background: rgba(255,255,255,0.5) !important; color: #ADB5BD !important; border: 1px solid #DEE2E6 !important; padding: 4px 14px !important; font-size: 12px !important; font-weight: 500 !important; backdrop-filter: blur(8px) !important; border-radius: 8px !important; box-shadow: none !important; }
+button[key="logout_btn"]:hover { background: white !important; color: #FF4757 !important; border-color: #FF4757 !important; box-shadow: 0 4px 12px rgba(255,71,87,0.15) !important; transform: translateY(-1px) !important; }
+.stTextInput input, .stTextArea textarea { background: #F8F9FA !important; border: 1px solid #DEE2E6 !important; border-radius: 10px !important; color: #2D3436 !important; font-size: 13px !important; transition: all 0.2s ease !important; }
+.stTextInput input:focus, .stTextArea textarea:focus { border-color: #FF4757 !important; box-shadow: 0 0 0 3px rgba(255,71,87,0.1) !important; background: white !important; }
+.stTabs [data-baseweb="tab"] { font-size: 13px; font-weight: 500; color: #636E72; transition: all 0.2s ease; }
 .stTabs [aria-selected="true"] { color: #FF4757 !important; border-bottom-color: #FF4757 !important; }
-div[data-testid="metric-container"] { background: white; border: 1px solid #E9ECEF; border-radius: 12px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+.stTabs [data-baseweb="tab"]:hover { color: #FF4757; }
+div[data-testid="metric-container"] { background: white; border: 1px solid #E9ECEF; border-radius: 14px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
 div[data-testid="stSelectbox"] label { display: none !important; }
 div[data-testid="stSelectbox"] { margin-bottom: 0 !important; }
-div[data-testid="stSelectbox"] div[data-baseweb="select"] { background: white; border: 1px solid #E9ECEF; border-radius: 8px; }
+div[data-testid="stSelectbox"] div[data-baseweb="select"] { background: white; border: 1px solid #E9ECEF; border-radius: 8px; transition: border-color 0.2s ease; }
+div[data-testid="stSelectbox"] div[data-baseweb="select"]:hover { border-color: #FF4757; }
 button[data-testid="stPasswordVisibilityToggle"] { display: none !important; }
 [data-testid="stPasswordVisibilityToggle"] { display: none !important; }
 input[type="password"]::-ms-reveal { display: none !important; }
 input[type="password"]::-ms-clear { display: none !important; }
 input[type="password"]::-webkit-credentials-auto-fill-button { display: none !important; }
 input[type="password"]::-webkit-text-security { display: none !important; }
+/* === Animated Gradient BG === */
+@keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+.landing-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; background: linear-gradient(-45deg, #0F0C29, #302B63, #24243E, #1a1a3e); background-size: 400% 400%; animation: gradientShift 18s ease infinite; }
+.landing-bg::before { content: ''; position: absolute; top: -20%; right: -10%; width: 500px; height: 500px; background: radial-gradient(circle, rgba(255,71,87,0.15), transparent 70%); border-radius: 50%; animation: float 8s ease-in-out infinite; }
+.landing-bg::after { content: ''; position: absolute; bottom: -10%; left: -5%; width: 400px; height: 400px; background: radial-gradient(circle, rgba(124,92,252,0.12), transparent 70%); border-radius: 50%; animation: float 10s ease-in-out infinite 1s; }
+@keyframes float { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-20px) scale(1.05); } }
+.gradient-text { background: linear-gradient(135deg,#FF4757,#FF6B81,#FFA502); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.light-glow { filter: drop-shadow(0 0 12px rgba(255,71,87,0.3)); }
+.login-glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(24px) saturate(180%); -webkit-backdrop-filter: blur(24px) saturate(180%); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 24px; box-shadow: 0 24px 64px rgba(0,0,0,0.3); }
+.login-nav { background: rgba(255,255,255,0.05); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 12px 24px; margin: 16px auto; max-width: 1200px; display: flex; align-items: center; justify-content: space-between; }
+.demo-card { transition: all 0.3s cubic-bezier(0.175,0.885,0.32,1.275) !important; transform: perspective(600px) rotateY(0deg); }
+.demo-card:hover { transform: perspective(600px) rotateY(-4deg) translateY(-6px) !important; box-shadow: 0 20px 40px rgba(255,71,87,0.15) !important; border-color: #FF4757 !important; }
+.step-card { transition: all 0.4s cubic-bezier(0.175,0.885,0.32,1.275) !important; }
+.step-card:hover { transform: perspective(600px) rotateX(-3deg) translateY(-8px) !important; box-shadow: 0 24px 48px rgba(0,0,0,0.12) !important; }
+.hero-stat-item { background: rgba(255,255,255,0.06) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: rgba(255,255,255,0.9) !important; backdrop-filter: blur(8px) !important; }
+.hero-stat-item:hover { background: rgba(255,71,87,0.12) !important; border-color: rgba(255,71,87,0.3) !important; transform: translateY(-2px) !important; }
 """ + "</style><img src onerror=\"var t=setInterval(function(){document.querySelectorAll('[data-testid=\\'stPasswordVisibilityToggle\\']').forEach(function(e){e.style.display='none';e.style.width='0';e.style.height='0';e.style.overflow='hidden';e.style.padding='0';e.style.margin='0';e.style.border='0';})},200);setTimeout(function(){clearInterval(t)},15000)\" style=\"display:none\">", unsafe_allow_html=True)
 
 for k, v in [("user_id", None), ("username", None), ("show_notifs", False), ("chat_history", []), ("stay_logged_in", False)]:
@@ -246,13 +271,15 @@ def get_notifications(user_id):
     return notifs
 
 def render_login():
-    st.markdown("""<div class='floating-shape floating-shape-1'></div><div class='floating-shape floating-shape-2'></div><div class='floating-shape floating-shape-3'></div>""", unsafe_allow_html=True)
+    st.markdown("""<div class="landing-bg"></div>""", unsafe_allow_html=True)
     st.markdown("""
-    <div class='landing-nav'>
-        <div class='landing-logo'><i class='fas fa-fire' style='color:#FF4757'></i> Strive</div>
-        <div class='landing-nav-links'>
-            <a href='#how-it-works'>How It Works</a>
-            <a href='#get-started'>Get Started</a>
+    <div class='login-nav'>
+        <div style='font-size:20px;font-weight:700;color:white;display:flex;align-items:center;gap:10px'>
+            <i class='fas fa-fire' style='color:#FF4757;filter:drop-shadow(0 0 8px rgba(255,71,87,0.4))'></i> Strive
+        </div>
+        <div style='display:flex;gap:24px'>
+            <a href='#how-it-works' style='color:rgba(255,255,255,0.6);text-decoration:none;font-size:14px;font-weight:500;transition:color 0.2s' onmouseover='this.style.color="white"' onmouseout='this.style.color="rgba(255,255,255,0.6)"'>How It Works</a>
+            <a href='#get-started' style='color:rgba(255,255,255,0.9);text-decoration:none;font-size:14px;font-weight:600;background:rgba(255,71,87,0.15);padding:4px 14px;border-radius:8px;border:1px solid rgba(255,71,87,0.3);transition:all 0.2s' onmouseover='this.style.background="rgba(255,71,87,0.25)"' onmouseout='this.style.background="rgba(255,71,87,0.15)"'>Get Started</a>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -260,19 +287,21 @@ def render_login():
     col_text, col_form = st.columns([1.15, 0.85], gap="large")
     with col_text:
         st.markdown("""
-        <div class='hero-badge'>#1 Accountability Habit Tracker</div>
-        <h1 class='hero-title'>Strive</h1>
-        <h2 class='hero-subtitle'>For Your Goals.</h2>
-        <p class='hero-desc'>Stay consistent. Stay accountable with your team. Build streaks that matter.</p>
-        <div class='hero-stats'>
-            <div class='stat-item'><i class='fas fa-fire' style='color:#FF4757'></i> 4,200+ streaks</div>
-            <div class='stat-item'><i class='fas fa-users' style='color:#7C5CFC'></i> 850+ groups</div>
-            <div class='stat-item'><i class='fas fa-check-circle' style='color:#2ED573'></i> 12K+ check-ins</div>
+        <div style='padding:40px 0'>
+            <div style='display:inline-block;background:rgba(255,71,87,0.12);color:#FF6B81;font-size:12px;font-weight:600;padding:6px 18px;border-radius:20px;margin-bottom:16px;letter-spacing:0.03em;border:1px solid rgba(255,71,87,0.2)'>#1 Accountability Platform</div>
+            <h1 style='font-size:52px;font-weight:800;color:white;margin:0;line-height:1.1;letter-spacing:-0.02em'>Strive</h1>
+            <h2 style='font-size:48px;font-weight:800;margin:0 0 12px;line-height:1.1;letter-spacing:-0.02em;background:linear-gradient(135deg,#FF4757,#FF6B81,#FFA502);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text'>For Your Goals.</h2>
+            <p style='font-size:16px;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:28px;max-width:380px'>Stay consistent. Stay accountable with your team. Build streaks that matter.</p>
+            <div style='display:flex;gap:12px;flex-wrap:wrap'>
+                <div class='stat-item hero-stat-item'><i class='fas fa-fire' style='color:#FF4757'></i> 4,200+ streaks</div>
+                <div class='stat-item hero-stat-item'><i class='fas fa-users' style='color:#7C5CFC'></i> 850+ groups</div>
+                <div class='stat-item hero-stat-item'><i class='fas fa-check-circle' style='color:#2ED573'></i> 12K+ check-ins</div>
+            </div>
         </div>
         """, unsafe_allow_html=True)
 
     with col_form:
-        st.markdown("<div id='get-started'></div><div class='form-header'><i class='fas fa-fire' style='color:#FF4757; font-size:22px'></i> Welcome to Strive</div>", unsafe_allow_html=True)
+        st.markdown("<div id='get-started'></div><div class='login-glass'><div style='display:flex;align-items:center;gap:10px;margin-bottom:16px'><i class='fas fa-fire' style='color:#FF4757;font-size:20px'></i><span style='font-size:16px;font-weight:700;color:white'>Welcome to Strive</span></div>", unsafe_allow_html=True)
         tab1, tab2 = st.tabs(["Sign In", "Create Account"])
         with tab1:
             email = st.text_input("Email", placeholder="you@example.com", key="l_email")
@@ -349,10 +378,11 @@ def render_login():
                     st.rerun()
                 else:
                     st.error(msg)
+        st.markdown("</div>", unsafe_allow_html=True)
 
-    st.markdown("<hr style='border:none; border-top:1px solid #E9ECEF; margin:48px 0 32px' id='how-it-works'>", unsafe_allow_html=True)
-    st.markdown("<h2 class='section-title'>How It Works</h2>", unsafe_allow_html=True)
-    st.markdown("<p class='section-desc'>Start your streak journey in four simple steps</p>", unsafe_allow_html=True)
+    st.markdown("<hr style='border:none; border-top:1px solid rgba(255,255,255,0.08); margin:48px 0 32px' id='how-it-works'>", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align:center;font-size:28px;font-weight:700;color:white;margin:0 0 8px'>How It Works</h2>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align:center;font-size:14px;color:rgba(255,255,255,0.5);margin:0 0 28px'>Start your streak journey in four simple steps</p>", unsafe_allow_html=True)
 
     steps_data = [
         ("1", "Create Your Goal", "Set a personal or team goal \u2014 morning gym, daily reading, or any habit you want to build", "Start small \u2014 pick one habit you can realistically do daily. Studies show that tying your goal to an existing routine (like \u201Cafter my morning coffee\u201D) boosts follow-through by 40%."),
@@ -378,30 +408,30 @@ def render_login():
                 st.rerun()
 
     st.markdown("""
-    <div class='landing-footer'>
-        <div class='footer-col'>
-            <div class='footer-brand'><i class='fas fa-fire' style='color:#FF4757'></i> Strive</div>
-            <div class='footer-text'>Stay consistent. Stay accountable.</div>
+    <div style='display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;padding:40px 0 0;border-top:1px solid rgba(255,255,255,0.06);margin-top:48px'>
+        <div style='min-width:120px'>
+            <div style='font-size:18px;font-weight:700;color:white;margin-bottom:6px;display:flex;align-items:center;gap:8px'><i class='fas fa-fire' style='color:#FF4757'></i> Strive</div>
+            <div style='font-size:13px;color:rgba(255,255,255,0.4)'>Stay consistent. Stay accountable.</div>
         </div>
-        <div class='footer-col'>
-            <div class='footer-heading'>Product</div>
-            <a href='#how-it-works' class='footer-link'>How It Works</a>
-            <a class='footer-link'>Features</a>
-            <a class='footer-link'>FAQ</a>
+        <div style='min-width:120px'>
+            <div style='font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px'>Product</div>
+            <a href='#how-it-works' style='display:block;font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;margin-bottom:6px;transition:color 0.2s' onmouseover='this.style.color="white"' onmouseout='this.style.color="rgba(255,255,255,0.4)"'>How It Works</a>
+            <a style='display:block;font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;margin-bottom:6px;transition:color 0.2s' onmouseover='this.style.color="white"' onmouseout='this.style.color="rgba(255,255,255,0.4)"'>Features</a>
+            <a style='display:block;font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;margin-bottom:6px;transition:color 0.2s' onmouseover='this.style.color="white"' onmouseout='this.style.color="rgba(255,255,255,0.4)"'>FAQ</a>
         </div>
-        <div class='footer-col'>
-            <div class='footer-heading'>Company</div>
-            <a class='footer-link'>About</a>
-            <a class='footer-link'>Blog</a>
-            <a class='footer-link'>Contact</a>
+        <div style='min-width:120px'>
+            <div style='font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px'>Company</div>
+            <a style='display:block;font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;margin-bottom:6px;transition:color 0.2s' onmouseover='this.style.color="white"' onmouseout='this.style.color="rgba(255,255,255,0.4)"'>About</a>
+            <a style='display:block;font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;margin-bottom:6px;transition:color 0.2s' onmouseover='this.style.color="white"' onmouseout='this.style.color="rgba(255,255,255,0.4)"'>Blog</a>
+            <a style='display:block;font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;margin-bottom:6px;transition:color 0.2s' onmouseover='this.style.color="white"' onmouseout='this.style.color="rgba(255,255,255,0.4)"'>Contact</a>
         </div>
-        <div class='footer-col'>
-            <div class='footer-heading'>Legal</div>
-            <a class='footer-link'>Privacy</a>
-            <a class='footer-link'>Terms</a>
+        <div style='min-width:120px'>
+            <div style='font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px'>Legal</div>
+            <a style='display:block;font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;margin-bottom:6px;transition:color 0.2s' onmouseover='this.style.color="white"' onmouseout='this.style.color="rgba(255,255,255,0.4)"'>Privacy</a>
+            <a style='display:block;font-size:13px;color:rgba(255,255,255,0.4);text-decoration:none;margin-bottom:6px;transition:color 0.2s' onmouseover='this.style.color="white"' onmouseout='this.style.color="rgba(255,255,255,0.4)"'>Terms</a>
         </div>
     </div>
-    <div class='footer-bottom'>Strive &copy; 2026</div>
+    <div style='text-align:center;font-size:11px;color:rgba(255,255,255,0.25);padding:16px 0'>Strive &copy; 2026</div>
     """, unsafe_allow_html=True)
 
 def render_feed():
