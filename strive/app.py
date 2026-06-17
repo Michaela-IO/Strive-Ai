@@ -568,7 +568,7 @@ def render_feed():
                     </div>
                 </div>""", unsafe_allow_html=True)
         else:
-            st.markdown("<div style='font-size:12px;color:#ADB5BD;padding:4px 0'>No one is predicted to break their streak. \U0001f44d</div>", unsafe_allow_html=True)
+            st.markdown("<div style='font-size:12px;color:#ADB5BD;padding:4px 0'>No one is predicted to break their streak</div>", unsafe_allow_html=True)
     except:
         st.markdown("<div style='font-size:12px;color:#ADB5BD;padding:4px 0'>Training models... check back soon.</div>", unsafe_allow_html=True)
 
