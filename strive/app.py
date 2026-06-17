@@ -43,15 +43,15 @@ st.markdown("<link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/l
 st.markdown("<style>" + """\
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 * { font-family: 'Inter', sans-serif; }
-[data-testid="stAppViewContainer"] { background: #F8F9FA; }
-[data-testid="stHeader"] { background: #F8F9FA; }
+[data-testid="stAppViewContainer"] { background: linear-gradient(135deg, #FFF5F7 0%, #F0F4FF 50%, #F5FFF7 100%); }
+[data-testid="stHeader"] { background: linear-gradient(135deg, #FFF5F7 0%, #F0F4FF 50%, #F5FFF7 100%); }
 .block-container { padding-top: 3.2rem !important; max-width: 1100px !important; }
 .landing-nav { display: flex; align-items: center; justify-content: space-between; padding: 16px 0; margin-bottom: 8px; }
 .landing-logo { font-size: 22px; font-weight: 700; color: #2D3436; }
 .landing-nav-links { display: flex; gap: 24px; }
 .landing-nav-links a { color: #636E72; text-decoration: none; font-size: 14px; font-weight: 500; }
 .landing-nav-links a:hover { color: #FF4757; }
-[data-testid="column"]:has(.form-header) > div:first-child { background: white; border: 1px solid #E9ECEF; border-radius: 16px; padding: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.06); }
+[data-testid="column"]:has(.form-header) > div:first-child { background: linear-gradient(135deg, #FFFFFF, #FAFBFF); border: 1px solid #E9ECEF; border-radius: 16px; padding: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.06); }
 .hero-badge { display: inline-block; background: #FFF0F0; color: #FF4757; font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 20px; margin-bottom: 14px; letter-spacing: 0.03em; }
 .hero-title { font-size: 48px; font-weight: 800; color: #2D3436; margin: 0; line-height: 1.1; letter-spacing: -0.02em; }
 .hero-subtitle { font-size: 48px; font-weight: 800; margin: 0 0 8px; line-height: 1.1; letter-spacing: -0.02em; color: #FF4757; }
@@ -64,7 +64,7 @@ html { scroll-behavior: smooth; }
 .form-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 16px; font-weight: 700; color: #2D3436; }
 .section-title { text-align: center; font-size: 28px; font-weight: 700; color: #2D3436; margin: 0 0 8px; }
 .section-desc { text-align: center; font-size: 14px; color: #636E72; margin: 0 0 28px; }
-.step-card { background: white; border: 1px solid #E9ECEF; border-radius: 14px; padding: 24px 16px; text-align: center; margin-bottom: 12px; }
+.step-card { background: linear-gradient(135deg, #FFFFFF, #F5F3FF); border: 1px solid #E9ECEF; border-radius: 14px; padding: 24px 16px; text-align: center; margin-bottom: 12px; }
 .step-number { width: 40px; height: 40px; border-radius: 50%; background: #FF4757; color: white; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 700; margin: 0 auto 12px; }
 .step-title { font-size: 14px; font-weight: 600; color: #2D3436; margin-bottom: 8px; }
 .step-desc { font-size: 12px; color: #636E72; line-height: 1.5; }
@@ -95,7 +95,7 @@ html { scroll-behavior: smooth; }
 .hero-stats .stat-item:nth-child(2) { animation:fadeUp 0.4s ease 0.7s both; }
 .hero-stats .stat-item:nth-child(3) { animation:fadeUp 0.4s ease 0.8s both; }
 .form-header { animation:fadeUp 0.5s ease 0.4s both; }
-.demo-card { background:white; border:1px solid #E9ECEF; border-radius:12px; padding:12px; cursor:pointer; transition:all 0.2s; text-align:center; animation:fadeUp 0.4s ease both; }
+.demo-card { background:linear-gradient(135deg,#FFFFFF,#F5F3FF); border:1px solid #E9ECEF; border-radius:12px; padding:12px; cursor:pointer; transition:all 0.2s; text-align:center; animation:fadeUp 0.4s ease both; }
 .demo-card:hover { border-color:#FF4757; box-shadow:0 4px 16px rgba(255,71,87,0.15); transform:translateY(-2px); }
 .demo-avatar { width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:14px; margin:0 auto 6px; }
 .demo-name { font-size:13px; font-weight:600; color:#2D3436; }
@@ -111,7 +111,7 @@ html { scroll-behavior: smooth; }
 .floating-shape-3 { width:150px; height:150px; background:#2ED573; bottom:-30px; right:20%; animation:float 5s ease-in-out infinite 0.5s; }
 """ + "</style>", unsafe_allow_html=True)
 st.markdown("<style>" + """\
-.app-nav { background: white; border: 1px solid #E9ECEF; border-radius: 16px; padding: 6px 20px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+.app-nav { background: linear-gradient(135deg, #FFFFFF, #FFF5F7); border: 1px solid #E9ECEF; border-radius: 16px; padding: 6px 20px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
 .nav-logo { font-size: 18px; font-weight: 700; color: #2D3436; display: flex; align-items: center; gap: 8px; }
 .nav-logo i { color: #FF4757; font-size: 20px; }
 .nav-user { font-size: 13px; color: #636E72; display: flex; align-items: center; gap: 6px; }
@@ -119,11 +119,11 @@ st.markdown("<style>" + """\
 div[data-testid="stRadio"] > div { display: flex; gap: 2px; flex-wrap: wrap; }
 div[data-testid="stRadio"] label { background: transparent; border: none; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; color: #636E72; cursor: pointer; transition: all 0.2s ease; }
 div[data-testid="stRadio"] label:hover { background: rgba(255,71,87,0.06); color: #FF4757; }
-div[data-testid="stRadio"] label[data-baseweb="radio"][aria-checked="true"] { background: #FF4757; color: white !important; font-weight: 600; }
+div[data-testid="stRadio"] label[data-baseweb="radio"][aria-checked="true"] { background: linear-gradient(135deg,#FF4757,#FF6B81); color: white !important; font-weight: 600; }
 div[data-testid="stRadio"] input { display: none; }
 div[data-testid="stRadio"] label > div:first-child { display: none; }
 
-.card, .goal-card, .stat-card, .profile-header, .notif-card { background: white; border: 1px solid #E9ECEF; border-radius: 14px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); transition: all 0.2s ease; }
+.card, .goal-card, .stat-card, .profile-header, .notif-card { background: linear-gradient(135deg, #FFFFFF, #FAFBFF); border: 1px solid #E9ECEF; border-radius: 14px; padding: 16px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); transition: all 0.2s ease; }
 .card:hover, .goal-card:hover, .notif-card:hover { border-color: #FF4757; box-shadow: 0 4px 16px rgba(255,71,87,0.08); }
 .goal-card { padding: 16px; margin-bottom: 10px; }
 .stat-card { padding: 20px 16px; text-align: center; margin-bottom: 12px; }
@@ -168,8 +168,8 @@ div[data-testid="stRadio"] label > div:first-child { display: none; }
 .notif-icon { width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
 .ai-message-user { background: #FF4757; color: white; border-radius: 16px 16px 4px 16px; padding: 10px 14px; font-size: 13px; margin: 6px 0; max-width: 80%; margin-left: auto; line-height: 1.5; }
 .ai-message-bot { background: white; border: 1px solid #E9ECEF; border-radius: 16px 16px 16px 4px; padding: 10px 14px; font-size: 13px; margin: 6px 0; max-width: 85%; line-height: 1.5; }
-div[data-testid="stButton"] button { background: #FF4757 !important; color: white !important; border: none !important; border-radius: 10px !important; font-weight: 600 !important; font-size: 13px !important; padding: 8px 18px !important; transition: all 0.2s !important; }
-div[data-testid="stButton"] button:hover { background: #E63946 !important; }
+div[data-testid="stButton"] button { background: linear-gradient(135deg, #FF4757, #FF6B81) !important; color: white !important; border: none !important; border-radius: 10px !important; font-weight: 600 !important; font-size: 13px !important; padding: 8px 18px !important; transition: all 0.2s !important; }
+div[data-testid="stButton"] button:hover { background: linear-gradient(135deg, #E63946, #FF4757) !important; }
 button[key="logout_btn"] { background: white !important; color: #ADB5BD !important; border: 1px solid #DEE2E6 !important; padding: 4px 14px !important; font-size: 12px !important; font-weight: 500 !important; border-radius: 8px !important; }
 button[key="logout_btn"]:hover { color: #FF4757 !important; border-color: #FF4757 !important; }
 .stTextInput input, .stTextArea textarea { background: #F8F9FA !important; border: 1px solid #DEE2E6 !important; border-radius: 10px !important; color: #2D3436 !important; font-size: 13px !important; }
@@ -275,7 +275,7 @@ def render_login():
         </div>
         <div style='display:flex;gap:24px'>
             <a href='#how-it-works' style='color:#636E72;text-decoration:none;font-size:14px;font-weight:500;transition:color 0.2s' onmouseover='this.style.color="#FF4757"' onmouseout='this.style.color="#636E72"'>How It Works</a>
-            <a href='#get-started' style='color:white;text-decoration:none;font-size:14px;font-weight:600;background:#FF4757;padding:6px 20px;border-radius:10px;transition:all 0.2s' onmouseover='this.style.background="#E63946"' onmouseout='this.style.background="#FF4757"'>Get Started</a>
+            <a href='#get-started' style='color:white;text-decoration:none;font-size:14px;font-weight:600;background:linear-gradient(135deg,#FF4757,#FF6B81);padding:6px 20px;border-radius:10px;transition:all 0.2s' onmouseover='this.style.background="linear-gradient(135deg,#E63946,#FF4757)"' onmouseout='this.style.background="linear-gradient(135deg,#FF4757,#FF6B81)"'>Get Started</a>
         </div>
     </div>
     """, unsafe_allow_html=True)
@@ -587,6 +587,7 @@ def render_feed():
                             <span class='feed-time'>{time_str}</span>
                         </div>
                         <div class='feed-caption'>"{c.caption}"</div>
+                        {("<img src='" + c.image_url + "' style='width:100%;max-height:260px;object-fit:cover;border-radius:10px;margin:8px 0' onerror=\"this.style.display='none'\">") if c.image_url else ""}
                         <div class='feed-foot'>
                             <span class='sentiment-chip sentiment-{sentiment}'><i class='fas {s_icon}'></i>{sentiment}</span>
                             <span class='feed-streak'><i class='fas fa-fire'></i>{streak}d</span>
@@ -689,6 +690,17 @@ def render_checkin():
     if sel_opts:
         selected = st.selectbox("Select habit", sel_opts, label_visibility="collapsed", key="checkin_select")
         caption = st.text_area("What did you do?", placeholder="e.g. Ran 5km — felt amazing!", key="checkin_caption", label_visibility="collapsed")
+        with st.expander("Add photo", expanded=False):
+            col_upload, col_cam = st.columns(2)
+            with col_upload:
+                photo_file = st.file_uploader("Upload", type=["jpg", "jpeg", "png"], label_visibility="collapsed", key="checkin_photo")
+            with col_cam:
+                photo_cam = st.camera_input("Camera", label_visibility="collapsed", key="checkin_cam")
+        photo_data = None
+        if photo_cam is not None:
+            photo_data = base64.b64encode(photo_cam.getvalue()).decode()
+        elif photo_file is not None:
+            photo_data = base64.b64encode(photo_file.getvalue()).decode()
         col_mood, col_submit = st.columns([1, 1])
         with col_mood:
             mood = st.select_slider("", options=["Struggling", "Okay", "Motivated"], value="Okay", label_visibility="collapsed")
@@ -716,7 +728,8 @@ def render_checkin():
                         sentiment = "motivated" if "Motivated" in mood else "struggling" if "Struggling" in mood else "neutral"
                         if caption:
                             sentiment, score = analyze_sentiment(caption)
-                        db.add(CheckIn(user_id=st.session_state.user_id, streak_group_id=gid, caption=caption, sentiment=sentiment, sentiment_score=score if caption else 0.5, verified=False))
+                        img_url = f"data:image/jpeg;base64,{photo_data}" if photo_data else None
+                        db.add(CheckIn(user_id=st.session_state.user_id, streak_group_id=gid, caption=caption, image_url=img_url, sentiment=sentiment, sentiment_score=score if caption else 0.5, verified=False))
                         member = db.query(StreakMember).filter(StreakMember.user_id == st.session_state.user_id, StreakMember.streak_group_id == gid).first()
                         if member:
                             member.current_streak += 1
@@ -1209,7 +1222,7 @@ def main():
 
     st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
 
-    st.markdown(f"""<div style='position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;background:linear-gradient(180deg,rgba(248,249,250,0.85),rgba(240,242,245,0.8)),url("{IMG_FOCUS}");background-size:cover;background-position:center;background-attachment:fixed;opacity:0.6;pointer-events:none'></div>""", unsafe_allow_html=True)
+    st.markdown("""<div style='position:fixed;top:0;left:0;width:100%;height:100%;z-index:-2;background:linear-gradient(135deg,#FFF5F7 0%,#F0F4FF 50%,#F5FFF7 100%);pointer-events:none'></div><div style='position:fixed;bottom:-20%;right:-10%;width:600px;height:600px;background:radial-gradient(circle,rgba(255,71,87,0.06),transparent 70%);border-radius:50%;pointer-events:none;z-index:-1;animation:float 8s ease-in-out infinite'></div><div style='position:fixed;top:-10%;left:-5%;width:400px;height:400px;background:radial-gradient(circle,rgba(124,92,252,0.04),transparent 70%);border-radius:50%;pointer-events:none;z-index:-1;animation:float 10s ease-in-out infinite 1s'></div>""", unsafe_allow_html=True)
 
     pages = {
         "Feed": render_feed,
