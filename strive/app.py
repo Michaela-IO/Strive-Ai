@@ -4,6 +4,9 @@ from models import User, Goal, StreakGroup, StreakMember, CheckIn, Reaction, Nud
 from config import APP_NAME, GOAL_CATEGORIES
 from datetime import datetime, date
 from services.auth_service import authenticate_user, create_user
+from services.prediction_service import train_models, predict_streak_break, get_model_metrics
+from services.iot_service import simulate_smartwatch_data, auto_verify_checkin, process_smartwatch_checkin
+from services.nlp_service import analyze_sentiment as nlp_analyze, evaluate_accuracy
 from pathlib import Path
 import base64
 
@@ -28,11 +31,12 @@ IMG_VISION = img_bg("vision.jfif")
 IMG_LOGIN = img_bg("gemini_bg.jpg")
 
 init_db()
-db_check = SessionLocal()
-if not db_check.query(User).first():
+db_boost = SessionLocal()
+if not db_boost.query(User).first():
     from seed_data import seed_database
     seed_database()
-db_check.close()
+train_models(db_boost)
+db_boost.close()
 
 st.set_page_config(page_title="Strive", page_icon="🔥", layout="wide", initial_sidebar_state="collapsed")
 
@@ -513,13 +517,20 @@ def render_feed():
         for uid, info in at_risk.items():
             u = info["user"]
             goals_str = ", ".join(info["groups"])
+            try:
+                pred = predict_streak_break(db, uid)
+                risk_pct = int(pred["probability"] * 100)
+                risk_color = "#FF4757" if risk_pct > 70 else "#FFA502"
+                risk_badge = f"<span style='font-size:11px;font-weight:600;color:{risk_color};margin-left:8px'>{risk_pct}% risk</span>"
+            except:
+                risk_badge = ""
             col_a, col_b = st.columns([6, 2])
             with col_a:
                 st.markdown(f"""
                 <div class='at-risk-row'>
                     <div class='avatar at-risk-avatar'>{initials(u.username)}</div>
                     <div>
-                        <div class='at-risk-name'>@{u.username}</div>
+                        <div class='at-risk-name'>@{u.username} {risk_badge}</div>
                         <div class='at-risk-goals'>Missed: {goals_str}</div>
                     </div>
                 </div>""", unsafe_allow_html=True)
@@ -532,6 +543,34 @@ def render_feed():
                     db.commit()
                     st.success(f"Nudge sent to @{u.username}!")
                     st.rerun()
+    st.markdown("<div class='feed-section-label'>ML Predictions</div>", unsafe_allow_html=True)
+    try:
+        top_risk = []
+        for gid in group_ids:
+            from services.prediction_service import get_top_at_risk
+            top_risk.extend(get_top_at_risk(db, gid, limit=3))
+        seen = set()
+        unique_risk = []
+        for r in top_risk:
+            if r["user_id"] not in seen and r["user_id"] != st.session_state.user_id:
+                seen.add(r["user_id"])
+                unique_risk.append(r)
+        if unique_risk:
+            for r in unique_risk[:5]:
+                pct = int(r["probability"] * 100)
+                color = "#FF4757" if pct > 70 else "#FFA502" if pct > 40 else "#2ED573"
+                st.markdown(f"""
+                <div style='display:flex;align-items:center;gap:10px;padding:8px 12px;margin-bottom:6px;background:white;border:1px solid #E9ECEF;border-radius:10px'>
+                    <div class='avatar at-risk-avatar'>{initials(r["username"])}</div>
+                    <div style='flex:1'>
+                        <div style='font-size:13px;font-weight:600;color:#2D3436'>@{r["username"]}</div>
+                        <div style='font-size:11px;color:#636E72'>Streak break risk: <span style='font-weight:600;color:{color}'>{pct}%</span></div>
+                    </div>
+                </div>""", unsafe_allow_html=True)
+        else:
+            st.markdown("<div style='font-size:12px;color:#ADB5BD;padding:4px 0'>No one is predicted to break their streak. \U0001f44d</div>", unsafe_allow_html=True)
+    except:
+        st.markdown("<div style='font-size:12px;color:#ADB5BD;padding:4px 0'>Training models... check back soon.</div>", unsafe_allow_html=True)
 
     checkins = db.query(CheckIn).filter(
         CheckIn.streak_group_id.in_(group_ids)
@@ -750,6 +789,26 @@ def render_checkin():
                         st.rerun()
     else:
         st.info("All caught up! Create a new goal to track more.")
+
+    st.markdown("<hr style='margin:16px 0;border:none;border-top:1px solid #E9ECEF'>", unsafe_allow_html=True)
+    st.markdown("<div style='font-size:12px;font-weight:600;color:#636E72;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px'>Smartwatch Auto-Checkin \U0001f4f1</div>", unsafe_allow_html=True)
+    st.markdown("<div style='font-size:12px;color:#ADB5BD;margin-bottom:8px'>Simulate a fitness watch sending gym data to auto-verify your check-in.</div>", unsafe_allow_html=True)
+    if sel_opts:
+        watch_group_id = None
+        for gid_, title_, cat_, icon_, streak_, longest_, checked_ in rows:
+            if title_ == selected and not checked_:
+                watch_group_id = gid_
+                break
+        if watch_group_id and st.button("Simulate Watch Sync", key="iot_sync", use_container_width=True):
+            result = process_smartwatch_checkin(db, st.session_state.user_id, watch_group_id)
+            if result["status"] == "already_checked_in":
+                st.warning("Already checked in today!")
+            elif result["verified"]:
+                st.success(f"Auto-verified! \U00002705 Steps: {result['steps']:,} | Active: {result['active_minutes']}min | HR: {result['heart_rate']}bpm")
+                st.balloons()
+                st.rerun()
+            else:
+                st.info(f"Not enough activity to auto-verify. Steps: {result['steps']:,} | Active: {result['active_minutes']}min (needs 6,000 steps & 30min active)")
     db.close()
 
 def render_goals():
@@ -878,6 +937,65 @@ def render_stats():
             <div style='font-size:40px; color:#ADB5BD'><i class='fas fa-inbox'></i></div>
             <p style='color:#636E72'>No check-ins yet. Start your first streak!</p>
         </div>""", unsafe_allow_html=True)
+
+    st.markdown("<hr style='margin:28px 0;border:none;border-top:1px solid #E9ECEF'>", unsafe_allow_html=True)
+    st.markdown("<div class='section-label' style='margin-top:20px'>ML Model Performance</div>", unsafe_allow_html=True)
+    metrics = get_model_metrics()
+    if metrics:
+        import pandas as pd
+        import plotly.express as px
+        names = list(metrics.keys())
+        aucs = [metrics[n]["auc"] for n in names]
+        accs = [metrics[n]["accuracy"] for n in names]
+        f1s = [metrics[n]["f1"] for n in names]
+        df_m = pd.DataFrame({"Model": names, "AUC": aucs, "Accuracy": accs, "F1 Score": f1s})
+        fig_m = px.bar(df_m, x="Model", y=["AUC", "Accuracy", "F1 Score"],
+                       barmode="group", color_discrete_map={
+                           "AUC": "#7C5CFC", "Accuracy": "#FF4757", "F1 Score": "#2ED573"
+                       })
+        fig_m.update_layout(paper_bgcolor="rgba(0,0,0,0)", plot_bgcolor="rgba(0,0,0,0)",
+                            font_color="#636E72", margin=dict(l=0,r=0,t=20,b=0),
+                            legend=dict(orientation="h", y=1.1))
+        st.plotly_chart(fig_m, use_container_width=True)
+
+        best_model = max(names, key=lambda n: metrics[n]["f1"])
+        st.markdown(f"<div style='font-size:12px;color:#636E72;text-align:center'>Best model: <strong style='color:#FF4757'>{best_model}</strong> (F1: {metrics[best_model]['f1']}, AUC: {metrics[best_model]['auc']})</div>", unsafe_allow_html=True)
+
+        st.markdown("<div class='section-label' style='margin-top:20px'>NLP Mood Analysis Accuracy</div>", unsafe_allow_html=True)
+        test_set = [
+            ("Crushed leg day! Feeling amazing and strong!", "motivated", "positive"),
+            ("Great session, so proud of my progress", "motivated", "positive"),
+            ("Nailed it again. Consistency is key!", "motivated", "positive"),
+            ("Fired up and ready to go!", "motivated", "positive"),
+            ("Personal best today! Unstoppable!", "motivated", "positive"),
+            ("Barely made it but I showed up", "struggling", "struggling"),
+            ("Tough morning, really struggled today", "struggling", "struggling"),
+            ("Exhausted but I did it", "struggling", "struggling"),
+            ("Rough day, almost didn't come", "struggling", "struggling"),
+            ("Hard session, feeling drained", "struggling", "struggling"),
+            ("Did my daily practice", "neutral", "neutral"),
+            ("Logged in for the day", "neutral", "neutral"),
+            ("Completed my task", "neutral", "neutral"),
+            ("Another day checked off", "neutral", "neutral"),
+            ("Keeping up with my goal", "neutral", "neutral"),
+        ]
+        eval_result = evaluate_accuracy(test_set)
+        if eval_result["total"] > 0:
+            st.markdown(f"<div style='text-align:center;padding:12px;background:white;border:1px solid #E9ECEF;border-radius:12px'>"
+                        f"<span style='font-size:28px;font-weight:700;color:#FF4757'>{eval_result['overall_accuracy']*100:.0f}%</span>"
+                        f"<span style='font-size:12px;color:#636E72;display:block'>Overall accuracy ({eval_result['correct']}/{eval_result['total']} test messages)</span>"
+                        f"</div>", unsafe_allow_html=True)
+            cols = st.columns(3)
+            for i, label in enumerate(["motivated", "neutral", "struggling"]):
+                with cols[i]:
+                    d = eval_result.get(label, {})
+                    st.markdown(f"<div style='text-align:center;padding:8px;background:white;border:1px solid #E9ECEF;border-radius:10px'>"
+                                f"<div style='font-size:11px;font-weight:600;color:#636E72;text-transform:uppercase'>{label}</div>"
+                                f"<div style='font-size:16px;font-weight:700;color:#2D3436'>P:{d.get('precision',0)*100:.0f}%</div>"
+                                f"<div style='font-size:11px;color:#ADB5BD'>R:{d.get('recall',0)*100:.0f}% F1:{d.get('f1',0)*100:.0f}%</div>"
+                                f"</div>", unsafe_allow_html=True)
+    else:
+        st.markdown("<div style='text-align:center;padding:12px;color:#ADB5BD;font-size:13px'>Train models by visiting the Feed page first.</div>", unsafe_allow_html=True)
     db.close()
 
 def generate_ai_response(message, context, current, best, total, motivated, struggling):
