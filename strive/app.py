@@ -592,7 +592,6 @@ def render_feed():
                             <span class='feed-time'>{time_str}</span>
                         </div>
                         <div class='feed-caption'>"{c.caption}"</div>
-                        {("<img src='" + c.image_url + "' style='width:100%;max-height:260px;object-fit:cover;border-radius:10px;margin:8px 0' onerror=\"this.style.display='none'\">") if c.image_url else ""}
                         <div class='feed-foot'>
                             <span class='sentiment-chip sentiment-{sentiment}'><i class='fas {s_icon}'></i>{sentiment}</span>
                             <span class='feed-streak'><i class='fas fa-fire'></i>{streak}d</span>
