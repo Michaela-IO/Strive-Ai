@@ -77,32 +77,27 @@ def _generate_training_data(db: Session, n_samples: int = 2400) -> tuple:
     if not users:
         return None, None
 
+    rng = np.random.default_rng(42)
     rows = []
     labels = []
     for _ in range(n_samples):
-        streak = np.random.randint(0, 100)
-        consistency = np.random.uniform(0.3, 1.0)
-        avg_mood = np.random.uniform(0.0, 1.0)
-        struggling_rate = np.random.uniform(0.0, 0.6)
-        days_since = np.random.randint(0, 5)
-        group_size = np.random.randint(1, 11)
-        checkins_wk = np.random.randint(0, 7)
-        verified_rate = np.random.uniform(0.0, 1.0)
+        streak = rng.integers(0, 101)
+        consistency = rng.uniform(0.0, 1.0)
+        avg_mood = rng.uniform(0.0, 1.0)
+        struggling_rate = rng.uniform(0.0, 1.0)
+        days_since = rng.integers(0, 8)
+        group_size = rng.integers(1, 12)
+        checkins_wk = rng.integers(0, 8)
+        verified_rate = rng.uniform(0.0, 1.0)
 
-        break_prob = (
-            0.35
-            - 0.004 * streak
-            - 0.4 * consistency
-            - 0.25 * avg_mood
-            + 0.4 * struggling_rate
-            + 0.08 * days_since
-            - 0.02 * group_size
-            - 0.05 * checkins_wk
-            - 0.1 * verified_rate
-            + np.random.normal(0, 0.08)
-        )
-        break_prob = np.clip(break_prob, 0.0, 1.0)
-        will_break = 1 if break_prob > 0.5 else 0
+        low_streak = streak < 30
+        low_consistency = consistency < 0.5
+        low_mood = avg_mood < 0.4
+        high_struggle = struggling_rate > 0.4
+        long_gap = days_since > 3
+        low_verified = verified_rate < 0.4
+        risk_factors = sum([low_streak, low_consistency, low_mood, high_struggle, long_gap, low_verified])
+        will_break = 1 if risk_factors >= 3 else 0
 
         rows.append([streak, consistency, avg_mood, struggling_rate,
                      days_since, group_size, checkins_wk, verified_rate])

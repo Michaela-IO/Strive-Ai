@@ -7,6 +7,16 @@ from nltk.sentiment import SentimentIntensityAnalyzer
 
 _sia = SentimentIntensityAnalyzer()
 
+_BOOST_WORDS = {
+    "crushed": 0.5, "crushing": 0.5, "nailed": 0.6, "killed": 0.5, "beast": 0.6,
+    "unstoppable": 0.7, "fired": 0.4, "grind": 0.3, "grinding": 0.3, "progress": 0.3,
+    "strong": 0.3, "stronger": 0.4, "proud": 0.4, "amazing": 0.6, "awesome": 0.5,
+    "killing": 0.4, "personal": 0.2, "finally": 0.2, "woke": 0.3, "pushed": 0.3,
+    "barely": -0.5, "tough": -0.3, "exhausted": -0.5, "drained": -0.5, "rough": -0.4,
+    "struggled": -0.5, "struggling": -0.5, "hard": -0.2, "tired": -0.3,
+    "didnt": -0.2, "almost": -0.3, "missed": -0.4, "skip": -0.3, "lazy": -0.5,
+}
+
 def analyze_sentiment(text: str) -> tuple[str, float]:
     if not text or len(text.strip()) == 0:
         return "neutral", 0.5
@@ -17,15 +27,20 @@ def analyze_sentiment(text: str) -> tuple[str, float]:
 
     scores = _sia.polarity_scores(cleaned)
     compound = scores["compound"]
+    words = cleaned.split()
 
-    if compound >= 0.2:
+    boost = sum(_BOOST_WORDS.get(w, 0) for w in words)
+    adjusted = compound + boost * 0.3
+    adjusted = max(min(adjusted, 1.0), -1.0)
+
+    if adjusted >= 0.15:
         label = "motivated"
-    elif compound <= -0.2:
+    elif adjusted <= -0.1:
         label = "struggling"
     else:
         label = "neutral"
 
-    confidence = round(abs(compound) * 0.6 + 0.4, 2)
+    confidence = round(abs(adjusted) * 0.5 + 0.5, 2)
     confidence = min(max(confidence, 0.4), 1.0)
 
     return label, confidence
@@ -63,22 +78,21 @@ def extract_keywords(captions: list[str]) -> list[str]:
 def evaluate_accuracy(test_messages: list[tuple[str, str, str]]) -> dict:
     correct = 0
     total = len(test_messages)
-    by_label = {"motivated": {"correct": 0, "total": 0},
-                "neutral": {"correct": 0, "total": 0},
-                "struggling": {"correct": 0, "total": 0}}
+    labels = ["motivated", "neutral", "struggling"]
+    confusion = {t: {p: 0 for p in labels} for t in labels}
     for msg, expected, _ in test_messages:
-        label, _ = analyze_sentiment(msg)
-        by_label[expected]["total"] += 1
-        if label == expected:
+        predicted, _ = analyze_sentiment(msg)
+        confusion[expected][predicted] += 1
+        if predicted == expected:
             correct += 1
-            by_label[expected]["correct"] += 1
     accuracy = round(correct / total, 4) if total else 0
     results = {"overall_accuracy": accuracy, "total": total, "correct": correct}
-    for label, vals in by_label.items():
-        t = vals["total"]
-        c = vals["correct"]
-        precision = round(c / t, 4) if t else 0
-        recall = round(c / t, 4) if t else 0
-        f1 = round(2 * precision * recall / (precision + recall), 4) if (precision + recall) else 0
-        results[label] = {"precision": precision, "recall": recall, "f1": f1, "total": t}
+    for label in labels:
+        tp = confusion[label][label]
+        fp = sum(confusion[other][label] for other in labels if other != label)
+        fn = sum(confusion[label][other] for other in labels if other != label)
+        prec = round(tp / (tp + fp), 4) if (tp + fp) else 0
+        rec = round(tp / (tp + fn), 4) if (tp + fn) else 0
+        f1 = round(2 * prec * rec / (prec + rec), 4) if (prec + rec) else 0
+        results[label] = {"precision": prec, "recall": rec, "f1": f1, "total": tp + fn}
     return results
